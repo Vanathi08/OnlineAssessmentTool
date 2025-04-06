@@ -16,7 +16,7 @@ const Signup = () => {
       });
       if (res.data.success) {
         alert("Signup successful!");
-        navigate("/login");
+        navigate("/");
       } else {
         alert(res.data.message);
       }

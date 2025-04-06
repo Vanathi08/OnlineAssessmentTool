@@ -76,6 +76,16 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
+
+      <button
+        onClick={() => {
+          localStorage.clear();
+          window.location.href = "/";
+        }}
+        className=" mt-10 font-semibold p-3 bg-indigo-700 text-white rounded-md w-32"
+      >
+        Logout
+      </button>
     </div>
   );
 };
