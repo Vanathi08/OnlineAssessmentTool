@@ -22,7 +22,10 @@ function App() {
         <Route
           path="/test/:moduleName/:level"
           element={<TakeTest username={username} />}
+          
         />
+        <Route path="/take-test/:moduleName/:level" element={<TakeTest />} />
+
 
 
       </Routes>

@@ -30,7 +30,8 @@ const User = mongoose.model('User', userSchema, 'UserDetails');
 // Define schema for each level
 const levelSchema = new mongoose.Schema({
   title: String,
-  content: String
+  content: String,
+  link : String
 }, { _id: false });
 
 // Full module schema
@@ -54,8 +55,13 @@ const userDataSchema = new mongoose.Schema({
   moduleName: String,
   level: String,
   score: Number,
+  correctCount: Number,
+  incorrectCount: Number,
   completed: Boolean,
+  attemptCount: { type: Number, default: 0 }
 });
+
+
 
 const UserData = mongoose.model("UserData", userDataSchema, "UserData");
 
@@ -191,15 +197,65 @@ app.get("/api/test-questions/:moduleName/:level", async (req, res) => {
 
 
 // POST /api/test-submit
+// app.post('/api/test-submit', async (req, res) => {
+//   try {
+//     // console.log("📩 Incoming request at /api/test-submit:");
+//     // console.log(req.body);
+
+//     const { username, moduleName, level, userAnswers } = req.body;
+
+//     if (!username || !moduleName || !level || !Array.isArray(userAnswers)) {
+//       // console.log("🚫 Missing or invalid data in request body.");
+//       return res.status(400).json({ error: "Invalid request data" });
+//     }
+
+//     const testData = await QuestionsLevel.findOne({
+//       module: moduleName.toLowerCase(),
+//       level: level.toLowerCase()
+//     });
+
+//     if (!testData || !testData.questions) {
+//       // console.log("❌ Test data not found for", moduleName, level);
+//       return res.status(404).json({ error: "Questions not found" });
+//     }
+
+//     const correctAnswers = testData.questions.map(q => q.correctAnswer);
+//     let score = 0;
+
+//     userAnswers.forEach((ans, index) => {
+//       if (parseInt(ans) === parseInt(correctAnswers[index])) {
+//         score++;
+//       }
+//     });
+
+//     const completed = score >= 15;
+
+//     await UserData.findOneAndUpdate(
+//       { username, moduleName, level },
+//       { score, completed },
+//       { upsert: true, new: true }
+//     );
+
+//     // console.log(`✅ Score submitted for ${username} - Score: ${score}, Passed: ${completed}`);
+//     res.status(200).json({ score, completed });
+
+//   } catch (err) {
+//     // console.error("❌ Server Error in /api/test-submit:", err.message);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
+
+
+
+
+
+
 app.post('/api/test-submit', async (req, res) => {
   try {
-    // console.log("📩 Incoming request at /api/test-submit:");
-    // console.log(req.body);
-
     const { username, moduleName, level, userAnswers } = req.body;
 
     if (!username || !moduleName || !level || !Array.isArray(userAnswers)) {
-      // console.log("🚫 Missing or invalid data in request body.");
       return res.status(400).json({ error: "Invalid request data" });
     }
 
@@ -209,35 +265,69 @@ app.post('/api/test-submit', async (req, res) => {
     });
 
     if (!testData || !testData.questions) {
-      // console.log("❌ Test data not found for", moduleName, level);
       return res.status(404).json({ error: "Questions not found" });
     }
 
     const correctAnswers = testData.questions.map(q => q.correctAnswer);
-    let score = 0;
+    let correctCount = 0;
 
     userAnswers.forEach((ans, index) => {
       if (parseInt(ans) === parseInt(correctAnswers[index])) {
-        score++;
+        correctCount++;
       }
     });
 
-    const completed = score >= 15;
+    const totalQuestions = correctAnswers.length;
+    const incorrectCount = totalQuestions - correctCount;
+    const completed = correctCount >= 15;
 
-    await UserData.findOneAndUpdate(
-      { username, moduleName, level },
-      { score, completed },
-      { upsert: true, new: true }
-    );
+    const existingData = await UserData.findOne({ username, moduleName, level });
 
-    // console.log(`✅ Score submitted for ${username} - Score: ${score}, Passed: ${completed}`);
-    res.status(200).json({ score, completed });
+    if (existingData) {
+      // Increment attempt count
+      await UserData.findOneAndUpdate(
+        { username, moduleName, level },
+        {
+          $set: {
+            score: correctCount,
+            correctCount,
+            incorrectCount,
+            completed
+          },
+          $inc: { attemptCount: 1 }  // <-- This line increments attempt count
+        },
+        { upsert: true, new: true }
+      );
+      
+      
+    } else {
+      // Create new record with attemptCount = 1
+      await UserData.create({
+        username,
+        moduleName,
+        level,
+        score: correctCount,
+        correctCount,
+        incorrectCount,
+        completed,
+        attemptCount: 1
+      });
+    }
+
+    res.status(200).json({
+      score: correctCount,
+      correctCount,
+      incorrectCount,
+      completed
+    });
 
   } catch (err) {
-    // console.error("❌ Server Error in /api/test-submit:", err.message);
+    console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
 
 
 
@@ -321,6 +411,25 @@ app.get('/api/module/completed/:userId/:moduleName', async (req, res) => {
 
 
   
+
+app.get('/api/user-progress/:username/:moduleName/:level', async (req, res) => {
+  const { username, moduleName, level } = req.params;
+
+  try {
+    const user = await UserData.findOne({ username, moduleName, level });
+
+    if (!user) {
+      return res.json({ attemptCount: 0 }); // First time
+    }
+
+    return res.json({ attemptCount: user.attemptCount || 0 });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch attempt count' });
+  }
+});
+
+
   
   
   
