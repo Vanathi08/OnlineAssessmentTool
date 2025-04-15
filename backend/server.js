@@ -21,7 +21,9 @@ mongoose.connect(process.env.MONGO_URI, {
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
+  role: { type: String, enum: ['student', 'admin'], default: 'student' }
 });
+
 
 const User = mongoose.model('User', userSchema, 'UserDetails');
 
@@ -101,19 +103,42 @@ app.post('/api/signup', async (req, res) => {
 });
 
 // Login route
+// app.post('/api/login', async (req, res) => {
+//   const { username, password } = req.body;
+//   try {
+//     const user = await User.findOne({ username, password });
+//     if (!user) {
+//       return res.status(401).json({ success: false, message: "Invalid credentials" });
+//     }
+//     res.json({ success: true, message: "Login successful", username: user.username });
+//   } catch (err) {
+//     // console.error(err);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// });
+
+
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
+
   try {
     const user = await User.findOne({ username, password });
     if (!user) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
-    res.json({ success: true, message: "Login successful", username: user.username });
+
+    // Send the role along with username
+    res.json({ 
+      success: true, 
+      message: "Login successful", 
+      username: user.username,
+      role: user.role 
+    });
   } catch (err) {
-    // console.error(err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 
 app.get("/api/module/check/:moduleName", async (req, res) => {
     const moduleName = req.params.moduleName.toLowerCase(); // normalize
@@ -428,6 +453,82 @@ app.get('/api/user-progress/:username/:moduleName/:level', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch attempt count' });
   }
 });
+
+
+
+app.get("/api/user-data", async (req, res) => {
+  try {
+    const data = await UserData.find({ completed: true }); // Only get completed entries
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+
+// Get users who completed a specific module & level
+// app.get('/api/completed-users', async (req, res) => {
+//   const { moduleName, level } = req.query; // Extract the query parameters
+
+//   // Validate the query parameters
+//   if (!moduleName || !level) {
+//     return res.status(400).json({ message: 'Module name and level are required.' });
+//   }
+
+//   try {
+//     // Query the database for users who have completed the specified module and level
+//     const completedUsers = await UserData.find({
+//       moduleName,
+//       level,
+//       completed: true
+//     });
+
+//     // Return the completed users as the response
+//     if (completedUsers.length > 0) {
+//       res.json(completedUsers);
+//     } else {
+//       res.status(404).json({ message: 'No users found for this module and level.' });
+//     }
+//   } catch (err) {
+//     // Return error if something goes wrong with the database query
+//     res.status(500).json({ message: 'Server error', error: err.message });
+//   }
+// });
+
+
+// ✅ Route
+app.get('/api/completed-users', async (req, res) => {
+  const { moduleName, level } = req.query;
+
+  console.log("Query received:", moduleName, level);
+
+  try {
+    const completedUsers = await UserData.find({
+      moduleName: new RegExp(`^${moduleName}$`, 'i'), // case-insensitive
+      level: new RegExp(`^${level}$`, 'i'),
+      completed: true
+    });
+
+    console.log("Matched users:", completedUsers);
+    res.json(completedUsers);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   

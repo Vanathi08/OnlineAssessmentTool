@@ -5,6 +5,8 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import ModuleLevelPage from "./components/ModuleLevelPage";
 import TakeTest from "./components/TakeTest";
+import AdminDashboard from "./components/AdminDashboard";
+import LevelUsers from "./components/LevelUsers";
 
 
 // const App = () => {
@@ -25,6 +27,9 @@ function App() {
           
         />
         <Route path="/take-test/:moduleName/:level" element={<TakeTest />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/:moduleName/:level" element={<LevelUsers />} />
+
 
 
 
