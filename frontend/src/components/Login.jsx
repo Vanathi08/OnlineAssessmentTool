@@ -109,7 +109,10 @@ const Login = () => {
   };
 
   return (
-    <div className="mx-56 text-center mt-40 justify-items-center">
+    //<div className="mx-56 text-center mt-40 justify-items-center">
+  <div className="min-h-screen w-full flex justify-center items-center bg-cover bg-center"
+  style={{ backgroundColor:"darkslateblue" }}>
+
       <form
         onSubmit={handleLogin}
         className="p-5 rounded-lg bg-gray-100 shadow-2xl h-72"
