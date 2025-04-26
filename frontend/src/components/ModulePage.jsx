@@ -11,7 +11,7 @@ const ModulePage = () => {
   useEffect(() => {
     const checkModule = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/module/check/${moduleName}`);
+        const res = await axios.get(`https://onlineassessmenttool.onrender.com/api/module/check/${moduleName}`);
         if (res.data.exists) {
           setIsValid(true);
         } else {

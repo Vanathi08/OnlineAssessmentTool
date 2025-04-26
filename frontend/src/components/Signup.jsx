@@ -10,7 +10,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8000/api/signup", {
+      const res = await axios.post("https://onlineassessmenttool.onrender.com/api/signup", {
         username,
         password,
       });

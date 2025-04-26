@@ -24,7 +24,7 @@ const ModuleLevelPage = () => {
   useEffect(() => {
     const fetchLevel = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/module/${moduleName}/${level}`);
+        const res = await axios.get(`https://onlineassessmenttool.onrender.com/api/module/${moduleName}/${level}`);
         setLevelData(res.data);
       } catch (err) {
         console.error("Error fetching level:", err);
@@ -34,7 +34,7 @@ const ModuleLevelPage = () => {
 
     const fetchCompletedLevels = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/completed-levels/${username}/${moduleName}`);
+        const res = await axios.get(`https://onlineassessmenttool.onrender.com/api/completed-levels/${username}/${moduleName}`);
         const levels = res.data.completedLevels || [];
         setCompletedLevels(levels);
         if (levels.includes("basic") && levels.includes("intermediate") && levels.includes("advanced")) {
@@ -47,7 +47,7 @@ const ModuleLevelPage = () => {
 
     const fetchProgress = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/user-progress/${username}/${moduleName}`);
+        const res = await axios.get(`https://onlineassessmenttool.onrender.com/api/user-progress/${username}/${moduleName}`);
         setProgress(res.data.data);
       } catch (err) {
         console.error("Error fetching progress:", err);

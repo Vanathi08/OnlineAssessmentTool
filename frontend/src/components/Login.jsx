@@ -10,7 +10,7 @@
 //   const handleLogin = async (e) => {
 //     e.preventDefault();
 //     try {
-//       const res = await axios.post("http://localhost:8000/api/login", {
+//       const res = await axios.post("https://onlineassessmenttool.onrender.com/api/login", {
 //         username,
 //         password,
 //       });
@@ -81,7 +81,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8000/api/login", {
+      const res = await axios.post("https://onlineassessmenttool.onrender.com/api/login", {
         username,
         password,
       });
