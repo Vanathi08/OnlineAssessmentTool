@@ -10,7 +10,7 @@
 //     useEffect(() => {
 //         const fetchData = async () => {
 //             try {
-//                 const res = await axios.get("http://localhost:5001/api/user-data");
+//                 const res = await axios.get("http://localhost:8000/api/user-data");
 //                 const filtered = res.data.filter(
 //                     (user) =>
 //                         user.moduleName === moduleName && user.level === level
@@ -68,7 +68,7 @@
 //     useEffect(() => {
 //         const fetchCompletedUsers = async () => {
 //             try {
-//                 const res = await axios.get(`http://localhost:5001/api/completed-users`, {
+//                 const res = await axios.get(`http://localhost:8000/api/completed-users`, {
 //                     params: { moduleName, level }
 //                 });
 //                 setUsers(res.data);
@@ -128,7 +128,7 @@
 //   useEffect(() => {
 //     const fetchCompletedUsers = async () => {
 //       try {
-//         const res = await axios.get(`http://localhost:5001/api/completed-users`, {
+//         const res = await axios.get(`http://localhost:8000/api/completed-users`, {
 //           params: { moduleName, level },
 //         });
 //         setUsers(res.data);
@@ -201,7 +201,7 @@ const LevelUsers = () => {
       try {
         console.log("Fetching with:", moduleName, level);
         const res = await axios.get(
-          `http://localhost:5001/api/completed-users?moduleName=${moduleName}&level=${level}`
+          `http://localhost:8000/api/completed-users?moduleName=${moduleName}&level=${level}`
         );
         console.log("Fetched users:", res.data);
         setUsers(res.data);

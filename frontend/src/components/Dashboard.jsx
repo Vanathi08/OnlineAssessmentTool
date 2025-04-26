@@ -27,7 +27,7 @@ const Dashboard = () => {
     await Promise.all(
       topics.map(async (topic) => {
         try {
-          const res = await axios.get(`http://localhost:5001/api/module/completed/${user}/${topic.title.toLowerCase()}`);
+          const res = await axios.get(`http://localhost:8000/api/module/completed/${user}/${topic.title.toLowerCase()}`);
           newStatus[topic.title] = res.data.completed;
         } catch (err) {
           console.error(`Error checking completion for ${topic.title}:`, err);
@@ -41,7 +41,7 @@ const Dashboard = () => {
 
   const handleCardClick = async (moduleName) => {
     try {
-      const res = await axios.get(`http://localhost:5001/api/module/check/${moduleName.toLowerCase()}`);
+      const res = await axios.get(`http://localhost:8000/api/module/check/${moduleName.toLowerCase()}`);
       if (res.data.exists) {
         navigate(`/module/${moduleName.toLowerCase()}`);
       } else {

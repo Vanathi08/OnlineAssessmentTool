@@ -27,7 +27,7 @@ const TakeTest = () => {
 
   const fetchAttemptCount = async () => {
     try {
-      const res = await axios.get(`http://localhost:5001/api/user-progress/${username}/${moduleName}/${level}`);
+      const res = await axios.get(`http://localhost:8000/api/user-progress/${username}/${moduleName}/${level}`);
       setAttemptCount(res.data.attemptCount || 0);
     } catch (err) {
       console.error("Error fetching attempt count:", err);
@@ -38,7 +38,7 @@ const TakeTest = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/test-questions/${moduleName}/${level}`);
+        const res = await axios.get(`http://localhost:8000/api/test-questions/${moduleName}/${level}`);
         setQuestions(res.data.questions);
       } catch (err) {
         console.error("Error fetching questions:", err);
@@ -51,7 +51,7 @@ const TakeTest = () => {
   useEffect(() => {
     const fetchAttemptCount = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/user-progress/${username}/${moduleName}/${level}`);
+        const res = await axios.get(`http://localhost:8000/api/user-progress/${username}/${moduleName}/${level}`);
         setAttemptCount(res.data.attemptCount || 0);
       } catch (err) {
         console.error("Error fetching attempt count:", err);
@@ -70,7 +70,7 @@ const TakeTest = () => {
     const userAnswers = questions.map((_, i) => answers[i] ?? -1);
   
     try {
-      const res = await axios.post("http://localhost:5001/api/test-submit", {
+      const res = await axios.post("http://localhost:8000/api/test-submit", {
         username,
         moduleName,
         level,

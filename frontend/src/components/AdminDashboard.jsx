@@ -7,7 +7,7 @@
 //   useEffect(() => {
 //     const fetchUserData = async () => {
 //       try {
-//         const res = await axios.get("http://localhost:5001/api/user-data");
+//         const res = await axios.get("http://localhost:8000/api/user-data");
 //         setUserData(res.data);
 //       } catch (error) {
 //         console.error("Error fetching user data:", error.response?.data || error.message);
@@ -72,7 +72,7 @@
 //   useEffect(() => {
 //     const fetchUserData = async () => {
 //       try {
-//         const res = await axios.get("http://localhost:5001/api/user-data");
+//         const res = await axios.get("http://localhost:8000/api/user-data");
 //         setUserData(res.data);
 //       } catch (err) {
 //         console.error("Error fetching user data:", err);
@@ -146,7 +146,7 @@
 //     useEffect(() => {
 //         const fetchUserData = async () => {
 //             try {
-//                 const res = await axios.get("http://localhost:5001/api/user-data");
+//                 const res = await axios.get("http://localhost:8000/api/user-data");
 //                 setUserData(res.data);
 //             } catch (err) {
 //                 console.error("Error fetching user data:", err);
@@ -250,7 +250,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const res = await axios.get("http://localhost:5001/api/user-data");
+                const res = await axios.get("http://localhost:8000/api/user-data");
                 setUserData(res.data);
             } catch (err) {
                 console.error("Error fetching user data:", err);
